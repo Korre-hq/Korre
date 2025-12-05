@@ -3,32 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <title>KORRE | Client Portal</title>
+
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
-<body>
-  <div class="portal-container">
-    <h1>Your Client Dashboard</h1>
+<body class="portal-body">
 
-    <h2>Business Info</h2>
-    <div id="business-info"></div>
+  <div class="portal-wrapper">
 
-    <h2>Branding Rules</h2>
-    <div id="branding"></div>
+    <h1 class="portal-title">Client Dashboard</h1>
 
-    <h2>SOPs</h2>
-    <div id="sops"></div>
+    <!-- ADD-ONS DASHBOARDS ROW -->
+    <div class="addons-row">
+      <h2 class="section-title">Dashboards & Add-ons</h2>
 
-    <h2>AI Settings</h2>
-    <div id="ai-settings"></div>
+      <div class="addons-container">
+        <div class="addon-card outline-card empty-card">
+          <p>No dashboards active</p>
+        </div>
 
-    <h2>Recent Calls</h2>
-    <div id="calls"></div>
+        <button class="addon-plus-btn btn-outline">+</button>
+      </div>
+    </div>
 
-    <button onclick="logout()" class="btn btn-small">Logout</button>
+
+    <!-- BUSINESS INFO -->
+    <div class="portal-section outline-card" id="business-info-card">
+      <h2 class="section-title">Business Info</h2>
+      <div id="business-info" class="section-content"></div>
+    </div>
+
+    <!-- BRANDING RULES -->
+    <div class="portal-section outline-card">
+      <h2 class="section-title">Branding Rules</h2>
+      <div id="branding" class="section-content"></div>
+    </div>
+
+    <!-- SOPs -->
+    <div class="portal-section outline-card">
+      <h2 class="section-title">Standard Operating Procedures</h2>
+      <div id="sops" class="section-content"></div>
+    </div>
+
+    <!-- AI SETTINGS -->
+    <div class="portal-section outline-card">
+      <h2 class="section-title">AI Settings</h2>
+      <div id="ai-settings" class="section-content"></div>
+    </div>
+
+    <!-- CALLS -->
+    <div class="portal-section outline-card">
+      <h2 class="section-title">Recent Calls</h2>
+      <div id="calls" class="section-content"></div>
+    </div>
+
+    <!-- Pricing Tier Indicator -->
+    <div class="pricing-tier-indicator">
+      <div class="tier tier-basic active-tier">Basic</div>
+      <div class="tier tier-pro">Pro</div>
+      <div class="tier tier-elite">Elite</div>
+    </div>
+
+    <!-- Logout -->
+    <button onclick="logout()" class="btn btn-small logout-btn">Logout</button>
   </div>
 
   <script src="client-portal.js"></script>
 </body>
 </html>
+
