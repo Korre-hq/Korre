@@ -30,7 +30,7 @@ async function login() {
     // after creating the user, create the business row
     await createBusinessRow(signupData.user.id);
 
-    window.location.href = "client-portal.html";
+    window.location.href = "client_portal.html";
     return;
   }
 
@@ -38,7 +38,7 @@ async function login() {
   const { data: userData } = await supabaseClient.auth.getUser();
   await ensureBusinessExists(userData.user.id);
 
-  window.location.href = "client-portal.html";
+  window.location.href = "client_portal.html";
 }
 
 async function createBusinessRow(userId) {
@@ -61,3 +61,4 @@ async function ensureBusinessExists(userId) {
     await createBusinessRow(userId);
   }
 }
+
