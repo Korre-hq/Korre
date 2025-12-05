@@ -471,7 +471,136 @@ p {
     margin-top: 0.5rem;
 }
 
+/* PORTAL BASE BACKGROUND */
+.portal-body {
+  background: linear-gradient(
+    to bottom right,
+    #51a3a3 0%,
+    #f5f5f5 100%
+  );
+  min-height: 100vh;
+  padding: 3rem 0;
+}
 
+.portal-wrapper {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* TITLES */
+.portal-title {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 3rem;
+}
+
+/* OUTLINE CARD SECTIONS */
+.outline-card {
+  border: 1px solid rgba(255,255,255,0.8);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  background: rgba(10, 26, 47, 0.15);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(6px);
+}
+
+.outline-card:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: #ffffff;
+  transform: translateY(-3px);
+}
+
+/* SECTION TITLES */
+.section-title {
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+}
+
+/* ADD-ONS ROW */
+.addons-row {
+  margin-bottom: 3rem;
+}
+
+.addons-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.empty-card {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+/* ADD ON PLUS BUTTON */
+.addon-plus-btn {
+  width: 55px;
+  height: 55px;
+  font-size: 2rem;
+  line-height: 0;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.addon-plus-btn:hover {
+  background: #ffffff;
+  color: #0a1a2f;
+}
+
+/* SECTION CONTENT */
+.section-content {
+  white-space: pre-wrap;
+  font-family: var(--font-body);
+}
+
+/* PRICING TIER INDICATOR */
+.pricing-tier-indicator {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.tier {
+  padding: 0.6rem 1.3rem;
+  border: 1px solid #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.tier:hover {
+  opacity: 1;
+  background: rgba(255,255,255,0.2);
+}
+
+.active-tier {
+  background: #ffffff;
+  color: #0a1a2f;
+  opacity: 1;
+}
+
+/* LOGOUT */
+.logout-btn {
+  display: block;
+  margin: 2rem auto;
+}
+ 
 /* Responsive */
 @media (max-width: 768px) {
     h1 {
@@ -497,3 +626,4 @@ p {
     }
 
 }
+
