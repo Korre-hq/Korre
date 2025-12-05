@@ -1,23 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>KORRE | Client Login</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8">
+    <title>KORRE | Client Login</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
-  <div class="auth-container">
-      <h1>Client Login</h1>
-      <input id="email" type="email" placeholder="Email" class="auth-input">
-      <input id="password" type="password" placeholder="Password" class="auth-input">
 
-      <button onclick="login()" class="btn btn-small">Login</button>
+    <header class="hero-section login-hero">
+        <div class="hero-background"></div>
 
-      <p id="error" class="auth-error"></p>
-  </div>
+        <div class="container">
 
-  <script src="login.js"></script>
+            <div class="logo-container">
+                <img src="korre_logo.png" alt="Korre logo" class="logo-img">
+                <h1 class="logo-text">KORRE</h1>
+                <p class="tagline">CLIENT PORTAL LOGIN</p>
+            </div>
+
+            <div class="login-box">
+                <input id="email" type="email" placeholder="Email" class="login-input">
+                <input id="password" type="password" placeholder="Password" class="login-input">
+
+                <button onclick="login()" class="btn btn-outline">Login</button>
+                <a href="index.html" style="margin-top: 1rem; display:block;">Back to Home</a>
+
+
+                <p id="error" class="auth-error"></p>
+            </div>
+        </div>
+    </header>
+
+    <script src="login.js"></script>
 </body>
 </html>
