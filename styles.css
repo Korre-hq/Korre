@@ -326,7 +326,7 @@ p {
 }
 .visibility-list {
     margin: 20px 0 30px 20px;
-    padding-left: 10px;
+    padding-left: 20px;
 }
 
 .visibility-list li {
@@ -652,5 +652,6 @@ p {
     }
 
 }
+
 
 
