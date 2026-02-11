@@ -175,6 +175,11 @@ p {
     /* Vertical gradient connecting radial sections */
     background: linear-gradient(to bottom, var(--color-bg-dark) 0%, #0f2530 50%, var(--color-bg-dark) 100%);
 }
+.kickstart-section p {
+    margin-bottom: 18px;
+    line-height: 1.6;
+    max-width: 620px;
+}
 
 .grid-2-col {
     display: grid;
@@ -319,6 +324,27 @@ p {
     height: 80px;
     margin-bottom: 1rem;
 }
+.visibility-list {
+    margin: 20px 0 30px 20px;
+    padding-left: 10px;
+}
+
+.visibility-list li {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.closing-statement {
+    margin-top: 25px;
+    font-weight: 500;
+}
+
+
+
+
+
+
+
 /* BOTTOM CONTACT SECTION FIX */
 .logo-container-footer {
     width: 100%;
@@ -626,4 +652,5 @@ p {
     }
 
 }
+
 
