@@ -458,6 +458,11 @@ p {
     justify-content: center;
     gap: 1rem;
 }
+.social-icons a {
+    pointer-events: auto;
+    position: relative;
+    z-index: 10;
+}
 /* LOGIN PAGE STYLING */
 .login-hero {
     height: 100vh;
@@ -652,6 +657,7 @@ p {
     }
 
 }
+
 
 
 
