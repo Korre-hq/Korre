@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KORRE — AI Visual Campaign Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --cyan: #51a3a3;
+  --green: #52796f;
+  --bg:       #0a1a2f;
+  --bg2:      #0d1f38;
+  --bg3:      #111e2e;
+  --surface:  #0f2033;
+  --border:   rgba(81,163,163,0.14);
+  --text:     #f5f5f5;
+  --text-dim: rgba(245,245,245,0.42);
+  --text-mid: rgba(245,245,245,0.65);
+  --nav-bg:   rgba(10,26,47,0.92);
+  --mono-tag-bg: rgba(81,163,163,0.08);
+}
+[data-theme="light"] {
+  --bg:       #f5f5f0;
+  --bg2:      #eeede8;
+  --bg3:      #e8e7e2;
+  --surface:  #ffffff;
+  --border:   rgba(81,163,163,0.22);
+  --text:     #000000;
+  --text-dim: rgba(0,0,0,0.4);
+  --text-mid: rgba(0,0,0,0.6);
+  --nav-bg:   rgba(245,245,240,0.93);
+  --mono-tag-bg: rgba(81,163,163,0.1);
+}
+
+html { scroll-behavior: smooth; }
+body { background:var(--bg); color:var(--text); font-family:'DM Mono',monospace; font-weight:300; overflow-x:hidden; cursor:none; transition:background 0.4s,color 0.4s; }
+
+.cursor { position:fixed; width:7px; height:7px; background:var(--cyan); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .3s,height .3s; mix-blend-mode:exclusion; }
+.cursor-ring { position:fixed; width:34px; height:34px; border:1px solid rgba(81,163,163,0.35); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .3s,height .3s; }
+
+/* NAV */
+nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:22px 48px; display:flex; justify-content:space-between; align-items:center; background:var(--nav-bg); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); transition:background 0.4s,border-color 0.4s; }
+.nav-logo { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; letter-spacing:4px; color:var(--text); text-decoration:none; }
+.nav-logo span { color:var(--cyan); }
+.nav-right { display:flex; align-items:center; gap:28px; }
+.nav-links { display:flex; gap:28px; list-style:none; }
+.nav-links a { text-decoration:none; color:var(--text-dim); font-size:10px; letter-spacing:2.5px; text-transform:uppercase; transition:color 0.3s; }
+.nav-links a:hover { color:var(--cyan); }
+.theme-toggle { width:40px; height:22px; background:var(--border); border:1px solid var(--border); border-radius:11px; cursor:none; position:relative; transition:background 0.4s; flex-shrink:0; }
+.theme-toggle::after { content:''; position:absolute; top:3px; left:3px; width:14px; height:14px; background:var(--cyan); border-radius:50%; transition:transform 0.3s; }
+[data-theme="light"] .theme-toggle::after { transform:translateX(18px); }
+.toggle-label { font-size:9px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; }
+.nav-cta { padding:9px 22px; border:1px solid var(--cyan); color:var(--cyan)!important; font-size:9px!important; letter-spacing:2px!important; text-transform:uppercase; text-decoration:none; transition:all 0.3s; background:transparent; white-space:nowrap; }
+.nav-cta:hover { background:var(--cyan); color:var(--bg)!important; }
+
+/* HERO */
+.hero { min-height:100vh; display:flex; flex-direction:column; justify-content:flex-end; padding:0 48px 80px; position:relative; overflow:hidden; }
+.hero-grid-bg { position:absolute; inset:0; z-index:0; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(5,1fr); gap:1px; opacity:0.18; }
+[data-theme="light"] .hero-grid-bg { opacity:0.07; }
+.grid-cell { background:var(--bg3); animation:cellPulse 6s infinite; }
+.grid-cell:nth-child(3n){animation-delay:-2s}.grid-cell:nth-child(5n){animation-delay:-4s}.grid-cell:nth-child(7n){animation-delay:-1s}
+@keyframes cellPulse { 0%,100%{opacity:0.3}50%{opacity:1;background:rgba(81,163,163,0.15)} }
+.hero-overlay { position:absolute; inset:0; z-index:1; background:linear-gradient(to top,var(--bg) 0%,rgba(10,26,47,0.3) 60%,transparent 100%); }
+[data-theme="light"] .hero-overlay { background:linear-gradient(to top,var(--bg) 0%,rgba(245,245,240,0.4) 60%,transparent 100%); }
+.hero-content { position:relative; z-index:2; max-width:860px; }
+.hero-tag { display:inline-flex; align-items:center; gap:10px; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:28px; opacity:0; animation:fadeUp 1s 0.3s forwards; }
+.hero-tag::before { content:''; display:block; width:24px; height:1px; background:var(--cyan); }
+.hero-h { font-family:'Cormorant Garamond',serif; font-size:clamp(56px,8vw,108px); font-weight:300; line-height:0.92; letter-spacing:-2px; margin-bottom:36px; opacity:0; animation:fadeUp 1s 0.5s forwards; }
+.hero-h em { font-style:italic; color:var(--cyan); }
+.hero-h strong { font-weight:700; }
+.hero-sub { font-size:13px; line-height:1.8; color:var(--text-mid); max-width:480px; margin-bottom:48px; font-weight:300; opacity:0; animation:fadeUp 1s 0.7s forwards; }
+.hero-actions { display:flex; gap:16px; align-items:center; flex-wrap:wrap; opacity:0; animation:fadeUp 1s 0.9s forwards; }
+.btn-p { padding:15px 36px; background:var(--cyan); color:var(--bg); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; border:none; cursor:none; transition:all 0.3s; font-weight:500; white-space:nowrap; display:inline-block; }
+.btn-p:hover { background:var(--text); }
+.btn-g { color:var(--text-dim); font-size:10px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; display:flex; align-items:center; gap:8px; transition:color 0.3s; }
+.btn-g:hover { color:var(--cyan); }
+.btn-g::after { content:'→'; transition:transform 0.3s; }
+.btn-g:hover::after { transform:translateX(4px); }
+.hero-scroll { position:absolute; bottom:40px; right:48px; z-index:2; display:flex; flex-direction:column; align-items:center; gap:10px; opacity:0; animation:fadeIn 1s 1.4s forwards; }
+.scroll-line { width:1px; height:56px; background:linear-gradient(to bottom,transparent,var(--cyan)); animation:scrollPulse 2s infinite; }
+@keyframes scrollPulse { 0%,100%{opacity:0.3}50%{opacity:1} }
+.scroll-text { font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--text-dim); writing-mode:vertical-rl; }
+
+/* MARQUEE */
+.marquee-wrap { background:var(--cyan); padding:12px 0; overflow:hidden; }
+.marquee-track { display:flex; white-space:nowrap; animation:marquee 22s linear infinite; }
+.marquee-track span { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--bg); padding:0 28px; font-weight:500; }
+.marquee-track span.dot { color:rgba(10,26,47,0.35); padding:0; }
+@keyframes marquee { 0%{transform:translateX(0)}100%{transform:translateX(-50%)} }
+
+/* SECTIONS */
+.sec { padding:120px 48px; transition:background 0.4s; }
+.sec-alt { background:var(--bg2); }
+.sec-label { display:flex; align-items:center; gap:14px; font-size:9px; letter-spacing:3.5px; text-transform:uppercase; color:var(--cyan); margin-bottom:56px; }
+.sec-label::before { content:''; display:block; width:28px; height:1px; background:var(--cyan); }
+.sec-h { font-family:'Cormorant Garamond',serif; font-size:clamp(34px,4.5vw,60px); font-weight:300; line-height:1.05; letter-spacing:-0.5px; }
+.sec-h em { font-style:italic; color:var(--cyan); }
+.sec-h strong { font-weight:700; }
+
+.what-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.what-body { color:var(--text-mid); font-size:13px; line-height:1.85; margin-bottom:24px; font-weight:300; }
+.tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
+.tag { border:1px solid var(--border); color:var(--text-dim); padding:5px 12px; font-size:9px; letter-spacing:2px; text-transform:uppercase; transition:all 0.3s; }
+.tag:hover { border-color:var(--cyan); color:var(--cyan); }
+
+.stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); margin-top:56px; }
+.stat-cell { padding:32px 28px; background:var(--bg); }
+[data-theme="light"] .stat-cell { background:var(--bg2); }
+.stat-num { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:700; color:var(--cyan); line-height:1; margin-bottom:8px; }
+.stat-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); }
+
+/* PORTFOLIO */
+.masonry { columns:3; column-gap:10px; margin-top:48px; }
+.m-item { break-inside:avoid; margin-bottom:10px; position:relative; overflow:hidden; background:var(--bg3); cursor:none; }
+.m-item:nth-child(1){height:360px}.m-item:nth-child(2){height:240px}.m-item:nth-child(3){height:300px}
+.m-item:nth-child(4){height:200px}.m-item:nth-child(5){height:420px}.m-item:nth-child(6){height:270px}
+.m-item:nth-child(7){height:340px}.m-item:nth-child(8){height:280px}.m-item:nth-child(9){height:220px}
+.m-bg { position:absolute; inset:0; transition:transform 0.7s ease; }
+.m-item:nth-child(1) .m-bg{background:linear-gradient(160deg,#0d1a2a 0%,#0a2020 60%,#163030 100%)}
+.m-item:nth-child(2) .m-bg{background:linear-gradient(200deg,#111 0%,#1a2a2a 100%)}
+.m-item:nth-child(3) .m-bg{background:linear-gradient(140deg,#0a1820 0%,#0d2525 100%)}
+.m-item:nth-child(4) .m-bg{background:linear-gradient(180deg,#0f1f1f 0%,#1a2a2a 100%)}
+.m-item:nth-child(5) .m-bg{background:linear-gradient(150deg,#091520 0%,#0a2020 50%,#122828 100%)}
+.m-item:nth-child(6) .m-bg{background:linear-gradient(170deg,#0d1414 0%,#1a2828 100%)}
+.m-item:nth-child(7) .m-bg{background:linear-gradient(130deg,#0a1818 0%,#101e1e 100%)}
+.m-item:nth-child(8) .m-bg{background:linear-gradient(160deg,#111 0%,#141e1e 100%)}
+.m-item:nth-child(9) .m-bg{background:linear-gradient(180deg,#0a1010 0%,#111a1a 100%)}
+.m-item:hover .m-bg { transform:scale(1.06); }
+.m-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(10,26,47,0.9) 0%,transparent 55%); opacity:0; transition:opacity 0.4s; display:flex; flex-direction:column; justify-content:flex-end; padding:20px; }
+.m-item:hover .m-overlay { opacity:1; }
+.m-pillar { font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:5px; }
+.m-name { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; color:#fff; }
+.m-placeholder { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px; opacity:0.12; }
+.m-ico { font-size:28px; color:var(--cyan); }
+.m-ico-text { font-size:8px; letter-spacing:2px; text-transform:uppercase; color:var(--cyan); }
+.view-more { text-align:center; margin-top:40px; }
+.view-more a { color:var(--text-dim); font-size:10px; letter-spacing:2.5px; text-transform:uppercase; text-decoration:none; border-bottom:1px solid var(--border); padding-bottom:3px; transition:all 0.3s; }
+.view-more a:hover { color:var(--cyan); border-color:var(--cyan); }
+
+/* PILLARS */
+.pillar-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); margin-top:56px; }
+.pillar-card { background:var(--bg2); padding:40px 32px; position:relative; overflow:hidden; cursor:none; transition:background 0.4s; }
+[data-theme="light"] .pillar-card { background:var(--surface); }
+.pillar-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--cyan); transform:scaleX(0); transform-origin:left; transition:transform 0.4s; }
+.pillar-card:hover::before { transform:scaleX(1); }
+.pillar-card:hover { background:var(--bg3); }
+[data-theme="light"] .pillar-card:hover { background:var(--bg2); }
+.pillar-n { font-family:'Cormorant Garamond',serif; font-size:52px; font-weight:700; color:rgba(81,163,163,0.1); line-height:1; margin-bottom:20px; }
+.pillar-name { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; margin-bottom:10px; }
+.pillar-desc { font-size:11px; color:var(--text-dim); line-height:1.75; font-weight:300; }
+
+/* INTEL FRAMEWORK */
+.intel-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.intel-visual { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); }
+.intel-cell { background:var(--bg3); padding:28px 24px; display:flex; flex-direction:column; justify-content:space-between; min-height:180px; transition:background 0.3s; }
+[data-theme="light"] .intel-cell { background:var(--surface); }
+.intel-cell:hover { background:var(--bg2); }
+[data-theme="light"] .intel-cell:hover { background:var(--bg2); }
+.ic-num { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:700; color:rgba(81,163,163,0.2); margin-bottom:12px; }
+.ic-label { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:600; margin-bottom:6px; }
+.ic-desc { font-size:9px; color:var(--text-dim); line-height:1.6; flex:1; }
+.ic-bar { height:2px; background:var(--mono-tag-bg); margin-top:16px; }
+.ic-fill { height:2px; background:var(--cyan); }
+
+/* PRODUCTS */
+.product-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); margin-top:56px; }
+.product-card { background:var(--bg2); display:flex; flex-direction:column; cursor:none; transition:background 0.4s; }
+[data-theme="light"] .product-card { background:var(--surface); }
+.product-img-zone { height:280px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--bg3); }
+[data-theme="light"] .product-img-zone { background:var(--bg2); }
+
+/* Alexandria model grid */
+.model-preview-grid { display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(2,1fr); gap:2px; width:100%; height:100%; }
+.model-cell { background:var(--bg); overflow:hidden; display:flex; align-items:flex-end; justify-content:center; }
+[data-theme="light"] .model-cell { background:var(--bg3); }
+.figure-svg { width:65%; height:90%; }
+
+/* Workbook mock */
+.workbook-zone { width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:linear-gradient(155deg,#091520 0%,#0a2020 100%); }
+[data-theme="light"] .workbook-zone { background:linear-gradient(155deg,#d8e4e4 0%,#ccdada 100%); }
+.workbook-card { width:150px; padding:22px 18px; background:var(--surface); border:1px solid var(--border); }
+.wc-thick { height:3px; background:var(--cyan); width:55%; margin-bottom:10px; }
+.wc-line { height:1px; background:var(--border); margin-bottom:7px; }
+.wc-short { width:38%; }
+.wc-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-top:10px; }
+.wc-cell { height:24px; background:var(--mono-tag-bg); }
+
+.product-badge { position:absolute; top:18px; right:18px; background:var(--cyan); color:var(--bg); font-size:8px; letter-spacing:1.5px; padding:4px 10px; font-weight:500; text-transform:uppercase; }
+.product-body { padding:32px 28px; flex:1; display:flex; flex-direction:column; }
+.product-eyebrow { font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
+.product-name { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:700; line-height:1.1; margin-bottom:12px; }
+.product-price { font-family:'Cormorant Garamond',serif; font-size:38px; font-weight:700; color:var(--cyan); line-height:1; margin-bottom:16px; }
+.price-was { font-size:16px; color:var(--text-dim); font-weight:300; text-decoration:line-through; margin-left:8px; font-family:'Cormorant Garamond',serif; }
+.product-desc { font-size:11px; color:var(--text-mid); line-height:1.8; margin-bottom:20px; flex:1; }
+.product-list { list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
+.product-list li { font-size:10px; color:var(--text-mid); display:flex; gap:8px; line-height:1.5; }
+.product-list li::before { content:'—'; color:var(--cyan); flex-shrink:0; }
+.product-btn { display:block; text-align:center; padding:14px; font-size:9px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; border:1px solid var(--cyan); color:var(--cyan); transition:all 0.3s; font-family:'DM Mono',monospace; }
+.product-btn:hover, .product-btn.solid { background:var(--cyan); color:var(--bg); }
+.product-btn.solid:hover { background:var(--text); border-color:var(--text); }
+
+/* PRICING */
+.pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); margin-top:56px; }
+.pc { background:var(--bg2); padding:44px 32px; position:relative; transition:background 0.4s; }
+[data-theme="light"] .pc { background:var(--surface); }
+.pc.featured { background:var(--bg3); border:1px solid var(--cyan); }
+[data-theme="light"] .pc.featured { background:var(--bg2); }
+.pc.featured::before { content:'MOST POPULAR'; position:absolute; top:-1px; left:50%; transform:translateX(-50%); background:var(--cyan); color:var(--bg); font-size:8px; letter-spacing:2px; padding:3px 14px; font-weight:500; }
+.pc-tier { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--text-dim); margin-bottom:16px; }
+.pc-price { font-family:'Cormorant Garamond',serif; font-size:54px; font-weight:700; line-height:1; margin-bottom:8px; }
+.pc-price sup { font-size:22px; vertical-align:super; }
+.pc-desc { font-size:11px; color:var(--text-mid); margin-bottom:28px; line-height:1.7; }
+.pc-div { height:1px; background:var(--border); margin-bottom:24px; }
+.pc-feats { list-style:none; display:flex; flex-direction:column; gap:10px; margin-bottom:36px; }
+.pc-feats li { font-size:11px; color:var(--text-mid); display:flex; gap:8px; line-height:1.4; }
+.pc-feats li::before { content:'—'; color:var(--cyan); flex-shrink:0; }
+.pc-btn { display:block; text-align:center; padding:13px; font-size:9px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; border:1px solid var(--border); color:var(--text-dim); transition:all 0.3s; font-family:'DM Mono',monospace; }
+.pc-btn:hover, .featured .pc-btn { background:var(--cyan); border-color:var(--cyan); color:var(--bg); }
+.pricing-note { text-align:center; color:var(--text-dim); font-size:10px; margin-top:24px; letter-spacing:1px; }
+
+/* PROCESS */
+.process-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:0; margin-top:56px; position:relative; }
+.process-grid::before { content:''; position:absolute; top:23px; left:8%; right:8%; height:1px; background:linear-gradient(to right,transparent,var(--cyan),transparent); opacity:0.25; }
+.pstep { padding:0 18px; text-align:center; }
+.pstep-n { width:46px; height:46px; border-radius:50%; border:1px solid rgba(81,163,163,0.3); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:700; color:var(--cyan); margin:0 auto 20px; background:var(--bg); position:relative; z-index:1; transition:all 0.3s; }
+[data-theme="light"] .pstep-n { background:var(--bg2); }
+.pstep:hover .pstep-n { background:var(--cyan); color:var(--bg); border-color:var(--cyan); }
+.pstep-title { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; margin-bottom:8px; }
+.pstep-desc { font-size:10px; color:var(--text-dim); line-height:1.7; }
+
+/* CONTACT */
+.contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.contact-h { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,4.5vw,64px); font-weight:300; line-height:0.95; letter-spacing:-1px; margin-bottom:24px; }
+.contact-h em { font-style:italic; color:var(--cyan); }
+.contact-body { color:var(--text-mid); font-size:12px; line-height:1.85; margin-bottom:24px; }
+.call-box { background:var(--mono-tag-bg); border:1px solid var(--border); padding:22px 24px; margin-bottom:28px; }
+.call-box p { font-size:11px; color:var(--text-mid); line-height:1.75; margin-bottom:14px; }
+.btn-call { display:inline-block; padding:11px 28px; background:transparent; border:1px solid var(--cyan); color:var(--cyan); font-family:'DM Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; transition:all 0.3s; cursor:none; }
+.btn-call:hover { background:var(--cyan); color:var(--bg); }
+.form-section-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); margin-bottom:16px; display:block; }
+.form { display:flex; flex-direction:column; gap:14px; }
+.fi { width:100%; background:transparent; border:none; border-bottom:1px solid var(--border); padding:14px 0; color:var(--text); font-family:'DM Mono',monospace; font-size:12px; font-weight:300; outline:none; transition:border-color 0.3s,color 0.4s; }
+.fi::placeholder { color:var(--text-dim); }
+.fi:focus { border-color:var(--cyan); }
+.fi.ta { resize:none; height:72px; }
+.fsub { align-self:flex-start; background:var(--cyan); color:var(--bg); border:none; padding:16px 40px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; cursor:none; transition:all 0.3s; margin-top:8px; font-weight:500; }
+.fsub:hover { background:var(--text); }
+
+footer { padding:40px 48px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:var(--bg); transition:background 0.4s,border-color 0.4s; }
+.footer-logo { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:700; letter-spacing:3px; }
+.footer-logo span { color:var(--cyan); }
+.footer-links { display:flex; gap:28px; }
+.footer-links a { color:var(--text-dim); text-decoration:none; font-size:9px; letter-spacing:2px; text-transform:uppercase; transition:color 0.3s; }
+.footer-links a:hover { color:var(--cyan); }
+.footer-copy { color:var(--text-dim); font-size:9px; letter-spacing:1px; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.reveal { opacity:0; transform:translateY(32px); transition:opacity 0.8s ease,transform 0.8s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+@media(max-width:900px){
+  nav{padding:18px 24px}
+  .nav-links{display:none}
+  .hero,.sec{padding:80px 24px}
+  .hero{padding:0 24px 60px}
+  .what-grid,.intel-grid,.contact-grid,.product-grid{grid-template-columns:1fr;gap:40px}
+  .pillar-grid,.pricing-grid{grid-template-columns:1fr}
+  .process-grid{grid-template-columns:1fr}
+  .process-grid::before{display:none}
+  .masonry{columns:2}
+  .stat-row{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:20px;text-align:center}
+  .intel-visual{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .masonry{columns:1}
+  .intel-visual{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="#" class="nav-logo">KORRE<span>.</span></a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul>
+    <span class="toggle-label" id="toggleLabel">Dark</span>
+    <div class="theme-toggle" id="themeToggle"></div>
+    <a href="https://calendly.com/korrehq/20min" target="_blank" class="nav-cta">Book a free call</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid-bg" id="heroGrid"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-tag">AI Visual Campaign Studio — DTC Fashion &amp; Beauty</p>
+    <h1 class="hero-h">
+      Where your brand<br>becomes <em>a world</em><br><strong>worth entering.</strong>
+    </h1>
+    <p class="hero-sub">
+      9-image campaigns. Six aesthetic pillars. Built for brands who are ready to clarify who they are and express it with visual precision.
+    </p>
+    <div class="hero-actions">
+      <a href="https://calendly.com/korrehq/20min" target="_blank" class="btn-p">Book a 20-min strategy call</a>
+      <a href="#work" class="btn-g">View portfolio</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>9-Image Campaigns</span><span class="dot">✦</span><span>A/B Testing Matrix</span><span class="dot">✦</span><span>Six Aesthetic Pillars</span><span class="dot">✦</span><span>AI Model Reference</span><span class="dot">✦</span><span>DTC Fashion &amp; Beauty</span><span class="dot">✦</span><span>Alexandria AI Model</span><span class="dot">✦</span><span>Perception Shift</span><span class="dot">✦</span><span>Controlled Deviation</span><span class="dot">✦</span><span>Campaign Architecture</span><span class="dot">✦</span><span>9-Image Campaigns</span><span class="dot">✦</span><span>A/B Testing Matrix</span><span class="dot">✦</span><span>Six Aesthetic Pillars</span><span class="dot">✦</span><span>AI Model Reference</span><span class="dot">✦</span><span>DTC Fashion &amp; Beauty</span><span class="dot">✦</span><span>Alexandria AI Model</span><span class="dot">✦</span><span>Perception Shift</span><span class="dot">✦</span><span>Controlled Deviation</span><span class="dot">✦</span><span>Campaign Architecture</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- WHAT WE BUILD -->
+<section class="sec reveal" id="about">
+  <div class="sec-label">What we build</div>
+  <div class="what-grid">
+    <div>
+      <h2 class="sec-h">Not content creation.<br><em>Visual world-building</em><br>with a system behind it.</h2>
+      <div class="stat-row reveal">
+        <div class="stat-cell"><div class="stat-num">9</div><div class="stat-label">Images per campaign arc</div></div>
+        <div class="stat-cell"><div class="stat-num">6</div><div class="stat-label">Aesthetic psychology pillars</div></div>
+        <div class="stat-cell"><div class="stat-num">10%</div><div class="stat-label">Controlled deviation principle</div></div>
+      </div>
+    </div>
+    <div>
+      <p class="what-body">Most DTC brands post. Korre builds worlds. Every campaign is a structured 9-image architecture — rooted in your brand's emotional register, mapped to your aesthetic pillar, and built on 90% market familiarity with 10% controlled deviation that makes you unmistakably distinct.</p>
+      <p class="what-body">Every campaign begins with a documented creative hypothesis before a single image is created. We define the pillar, choose the arc, and align the messaging with intention. The structure exists so the work is thoughtful, consistent, and strategically grounded.</p>
+      <p class="what-body">The result is visual work that doesn't just look good — it knows what it's doing and why.</p>
+      <div class="tags">
+        <span class="tag">Fashion &amp; Apparel</span>
+        <span class="tag">Skincare &amp; Beauty</span>
+        <span class="tag">Lifestyle DTC</span>
+        <span class="tag">AI-Directed Production</span>
+        <span class="tag">Perception Shift</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="sec sec-alt" id="work">
+  <div class="sec-label reveal">Portfolio</div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-end" class="reveal">
+    <h2 class="sec-h">Work in<br><em>progress.</em></h2>
+    <p style="font-size:10px;color:var(--text-dim);max-width:280px;text-align:right;line-height:1.8">Live portfolio on Higgsfield while campaigns finalize.<br><a href="https://higgsfield.ai/@korrehq" target="_blank" style="color:var(--cyan);text-decoration:none">View full archive ↗</a></p>
+  </div>
+  <div class="masonry reveal">
+    <div class="m-item"><div class="m-bg"></div><div class="m-placeholder"><div class="m-ico">◈</div><div class="m-ico-text">Add campaign image</div></div><div class="m-overlay"><div class="m-pillar">Status · Fashion</div><div class="m-name">Campaign 01</div></div></div>
+    <div class="m-item"><div class="m-bg"></div><div class="m-placeholder"><div class="m-ico">◈</div><div class="m-ico-text">Add campaign image</div></div><div class="m-overlay"><div class="m-pillar">Curation · Beauty</div><div class="m-name">Campaign 02</div></div></div>
+    <div class="m-item"><div class="m-bg"></div><div class="m-placeholder"><div class="m-ico">◈</div><div class="m-ico-text">Add campaign image</div></div><div class="m-overlay"><div class="m-pillar">Transcendence · Lifestyle</div><div class="m-name">Campaign 03</div></div></div>
+    <div class="m-item"><div class="m-bg"></div><div class="m-placeholder"><div class="m-ico">◈</div><div class="m-ico-text">Add campaign image</div></div><div class="m-overlay"><div class="m-pillar">Resistance · Streetwear</div><div class="m-name">Campaign 04</div></div></div>
+    <div class="m-item"><div class="m-bg"></div><div class="m-placeholder"><div class="m-ico">◈</div><div class="m-ico-text">Add campaign image</div></div><div class="m-overlay"><div class="m-pillar">Status · Skincare</div><div class="m-name">Campaign 05</div></div></div>
+    <div class="m-item"><div class="m-bg"></div><div class="m-placeholder"><div class="m-ico">◈</div><div class="m-ico-text">Add campaign image</div></div><div class="m-overlay"><div class="m-pillar">Conformity · Apparel</div><div class="m-name">Campaign 06</div></div></div>
+    <div class="m-item"><div class="m-bg"></div><div class="m-placeholder"><div class="m-ico">◈</div><div class="m-ico-text">Add campaign image</div></div><div class="m-overlay"><div class="m-pillar">Spectacle · Beauty</div><div class="m-name">Campaign 07</div></div></div>
+    <div class="m-item"><div class="m-bg"></div><div class="m-placeholder"><div class="m-ico">◈</div><div class="m-ico-text">Add campaign image</div></div><div class="m-overlay"><div class="m-pillar">Curation · Fashion</div><div class="m-name">Campaign 08</div></div></div>
+    <div class="m-item"><div class="m-bg"></div><div class="m-placeholder"><div class="m-ico">◈</div><div class="m-ico-text">Add campaign image</div></div><div class="m-overlay"><div class="m-pillar">Status · Lifestyle</div><div class="m-name">Campaign 09</div></div></div>
+  </div>
+  <div class="view-more reveal"><a href="https://higgsfield.ai/@korrehq" target="_blank">Browse full portfolio on Higgsfield ↗</a></div>
+</section>
+
+<!-- PILLARS -->
+<section class="sec" id="method">
+  <div class="sec-label reveal">The Method</div>
+  <h2 class="sec-h reveal">Every brand lives in<br>one of <em>six worlds.</em><br>We find yours first.</h2>
+  <div class="pillar-grid reveal">
+    <div class="pillar-card"><div class="pillar-n">01</div><div class="pillar-name">Status</div><div class="pillar-desc">Elevation through restraint. Lineage anchoring. Recognition without persuasion. The brand that is inevitable, not urgent.</div></div>
+    <div class="pillar-card"><div class="pillar-n">02</div><div class="pillar-name">Curation</div><div class="pillar-desc">Taste authority over explanation. Ambiguity as strategy. The brand that selects rather than persuades — and earns admiration for it.</div></div>
+    <div class="pillar-card"><div class="pillar-n">03</div><div class="pillar-name">Resistance</div><div class="pillar-desc">Opt-out belonging. Filtration through effort or commitment. Horizontal legitimacy. The brand built for people who earn their way in.</div></div>
+    <div class="pillar-card"><div class="pillar-n">04</div><div class="pillar-name">Conformity</div><div class="pillar-desc">Predictability as power. Cognitive ease. Social validation architecture. The dream that feels safe and achievable from where you are.</div></div>
+    <div class="pillar-card"><div class="pillar-n">05</div><div class="pillar-name">Spectacle</div><div class="pillar-desc">Pattern interruption. Compression of meaning. The brand that makes you stop mid-scroll and feel something before you understand why.</div></div>
+    <div class="pillar-card"><div class="pillar-n">06</div><div class="pillar-name">Transcendence</div><div class="pillar-desc">Moral altitude and doctrinal authority. The brand that stands for something and makes belonging feel like elevation, not just purchase.</div></div>
+  </div>
+</section>
+
+<!-- INTELLIGENCE FRAMEWORK -->
+<section class="sec sec-alt">
+  <div class="sec-label reveal">The Intelligence Framework</div>
+  <div class="intel-grid">
+    <div class="reveal">
+      <h2 class="sec-h">Strategy<br>before<br><em>production.</em></h2>
+      <p class="what-body" style="margin-top:28px">Behind every campaign is a structured brand intelligence framework. Before visuals are created, we clarify your aesthetic pillar, define the campaign arc, and align the emotional triggers that support your positioning.</p>
+      <p class="what-body">This is not automation for its own sake. It is a disciplined strategic layer that brings clarity before execution.</p>
+      <p class="what-body">The result is work that feels intentional, cohesive, and aligned with who your brand is becoming.</p>
+      <div class="tags" style="margin-top:24px">
+        <span class="tag">Alignment-first</span>
+        <span class="tag">Pillar-driven</span>
+        <span class="tag">Hypothesis-based</span>
+        <span class="tag">Campaign architecture</span>
+      </div>
+    </div>
+    <div class="intel-visual reveal">
+      <div class="intel-cell">
+        <div class="ic-num">01</div>
+        <div class="ic-label">Pillar Diagnosis</div>
+        <div class="ic-desc">We identify which of the six aesthetic pillars your brand lives in — and why it matters for how your visuals behave.</div>
+        <div class="ic-bar"><div class="ic-fill" style="width:90%"></div></div>
+      </div>
+      <div class="intel-cell">
+        <div class="ic-num">02</div>
+        <div class="ic-label">Arc Selection</div>
+        <div class="ic-desc">Story arc or atmosphere arc. Each campaign follows one clear mode so the 9 images feel like a world, not a collection.</div>
+        <div class="ic-bar"><div class="ic-fill" style="width:75%"></div></div>
+      </div>
+      <div class="intel-cell">
+        <div class="ic-num">03</div>
+        <div class="ic-label">Hook Alignment</div>
+        <div class="ic-desc">Every image is mapped to an emotional trigger before production begins. The hypothesis is written. The intent is clear.</div>
+        <div class="ic-bar"><div class="ic-fill" style="width:85%"></div></div>
+      </div>
+      <div class="intel-cell">
+        <div class="ic-num">04</div>
+        <div class="ic-label">10% Deviation</div>
+        <div class="ic-desc">90% market familiarity, 10% controlled deviation. Enough to be recognized. Enough to be remembered.</div>
+        <div class="ic-bar"><div class="ic-fill" style="width:60%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="sec" id="products">
+  <div class="sec-label reveal">Products</div>
+  <h2 class="sec-h reveal">Tools built for<br>brands building <em>themselves.</em></h2>
+
+  <div class="product-grid reveal">
+
+    <!-- ALEXANDRIA -->
+    <div class="product-card">
+      <div class="product-img-zone">
+        <div class="model-preview-grid">
+          <!-- 6 pose silhouettes representing the Alexandria model reference images -->
+          <div class="model-cell">
+            <svg class="figure-svg" viewBox="0 0 60 160" fill="none">
+              <ellipse cx="30" cy="14" rx="10" ry="12" fill="#51a3a3" opacity="0.45"/>
+              <rect x="21" y="25" width="18" height="38" rx="3" fill="#51a3a3" opacity="0.32"/>
+              <rect x="17" y="62" width="10" height="52" rx="3" fill="#51a3a3" opacity="0.28"/>
+              <rect x="33" y="62" width="10" height="52" rx="3" fill="#51a3a3" opacity="0.28"/>
+              <rect x="8" y="27" width="8" height="32" rx="3" fill="#51a3a3" opacity="0.2"/>
+              <rect x="44" y="24" width="8" height="26" rx="3" fill="#51a3a3" opacity="0.2" transform="rotate(-18 44 24)"/>
+            </svg>
+          </div>
+          <div class="model-cell">
+            <svg class="figure-svg" viewBox="0 0 60 160" fill="none">
+              <ellipse cx="30" cy="13" rx="9" ry="11" fill="#51a3a3" opacity="0.45"/>
+              <rect x="22" y="23" width="16" height="42" rx="3" fill="#51a3a3" opacity="0.32"/>
+              <rect x="18" y="64" width="10" height="56" rx="3" fill="#51a3a3" opacity="0.28"/>
+              <rect x="32" y="64" width="10" height="56" rx="3" fill="#51a3a3" opacity="0.28"/>
+              <rect x="9" y="25" width="8" height="38" rx="3" fill="#51a3a3" opacity="0.2"/>
+              <rect x="43" y="25" width="8" height="38" rx="3" fill="#51a3a3" opacity="0.2"/>
+            </svg>
+          </div>
+          <div class="model-cell">
+            <!-- side/profile -->
+            <svg class="figure-svg" viewBox="0 0 60 160" fill="none">
+              <ellipse cx="33" cy="13" rx="9" ry="11" fill="#51a3a3" opacity="0.45"/>
+              <rect x="26" y="23" width="15" height="40" rx="3" fill="#51a3a3" opacity="0.32"/>
+              <rect x="23" y="62" width="10" height="54" rx="3" fill="#51a3a3" opacity="0.28"/>
+              <rect x="36" y="62" width="10" height="54" rx="3" fill="#51a3a3" opacity="0.28"/>
+              <rect x="41" y="26" width="8" height="36" rx="3" fill="#51a3a3" opacity="0.2"/>
+            </svg>
+          </div>
+          <div class="model-cell">
+            <!-- crouched on floor -->
+            <svg class="figure-svg" viewBox="0 0 60 160" fill="none">
+              <ellipse cx="30" cy="52" rx="10" ry="11" fill="#51a3a3" opacity="0.45"/>
+              <rect x="21" y="62" width="18" height="28" rx="4" fill="#51a3a3" opacity="0.32"/>
+              <rect x="13" y="84" width="12" height="22" rx="5" fill="#51a3a3" opacity="0.28"/>
+              <rect x="36" y="84" width="12" height="22" rx="5" fill="#51a3a3" opacity="0.28"/>
+              <rect x="10" y="66" width="9" height="22" rx="3" fill="#51a3a3" opacity="0.2"/>
+              <rect x="42" y="66" width="9" height="22" rx="3" fill="#51a3a3" opacity="0.2"/>
+            </svg>
+          </div>
+          <div class="model-cell">
+            <!-- arm to face -->
+            <svg class="figure-svg" viewBox="0 0 60 160" fill="none">
+              <ellipse cx="30" cy="13" rx="9" ry="11" fill="#51a3a3" opacity="0.45"/>
+              <rect x="22" y="23" width="16" height="40" rx="3" fill="#51a3a3" opacity="0.32"/>
+              <rect x="18" y="62" width="10" height="55" rx="3" fill="#51a3a3" opacity="0.28"/>
+              <rect x="32" y="62" width="10" height="55" rx="3" fill="#51a3a3" opacity="0.28"/>
+              <rect x="9" y="25" width="8" height="24" rx="3" fill="#51a3a3" opacity="0.2"/>
+              <rect x="43" y="16" width="8" height="30" rx="3" fill="#51a3a3" opacity="0.22" transform="rotate(-28 43 16)"/>
+            </svg>
+          </div>
+          <div class="model-cell">
+            <!-- back view -->
+            <svg class="figure-svg" viewBox="0 0 60 160" fill="none">
+              <ellipse cx="30" cy="13" rx="9" ry="11" fill="#51a3a3" opacity="0.35"/>
+              <rect x="22" y="23" width="16" height="40" rx="3" fill="#51a3a3" opacity="0.3"/>
+              <rect x="18" y="62" width="10" height="56" rx="3" fill="#51a3a3" opacity="0.26"/>
+              <rect x="32" y="62" width="10" height="56" rx="3" fill="#51a3a3" opacity="0.26"/>
+              <rect x="9" y="26" width="8" height="36" rx="3" fill="#51a3a3" opacity="0.18"/>
+              <rect x="43" y="26" width="8" height="36" rx="3" fill="#51a3a3" opacity="0.18"/>
+            </svg>
+          </div>
+        </div>
+        <div class="product-badge">18 Poses Included</div>
+      </div>
+      <div class="product-body">
+        <div class="product-eyebrow">AI Model Reference · Guide</div>
+        <div class="product-name">Alexandria —<br>AI Model System</div>
+        <div class="product-price"><sup style="font-size:20px;vertical-align:super">$</sup>349<span style="font-size:18px;font-weight:300">.99</span></div>
+        <div class="product-desc">A complete AI model reference system built for DTC brands and AI designers. Alexandria is a fully realized AI model character — consistent face reference, full body poses, and generation-ready assets across 18 structured images.</div>
+        <ul class="product-list">
+          <li>18 structured reference images — full body poses + face set</li>
+          <li>Multiple angles, expressions, and wardrobe positions</li>
+          <li>2 complimentary images included with consultation booking</li>
+          <li>Expand to 40 images or add a custom model at $800</li>
+          <li>Commercial usage rights included</li>
+        </ul>
+        <a href="https://shop.beacons.ai/korrehq/13814391-4d0b-4516-874f-0878a08816b8" target="_blank" class="product-btn solid">Get Alexandria — $349.99 ↗</a>
+      </div>
+    </div>
+
+    <!-- WORKBOOK -->
+    <div class="product-card">
+      <div class="product-img-zone">
+        <div class="workbook-zone">
+          <div class="workbook-card">
+            <div class="wc-thick"></div>
+            <div class="wc-line" style="margin-top:10px"></div>
+            <div class="wc-line wc-short"></div>
+            <div class="wc-line" style="margin-top:5px"></div>
+            <div class="wc-line wc-short"></div>
+            <div class="wc-grid">
+              <div class="wc-cell"></div><div class="wc-cell"></div>
+              <div class="wc-cell"></div><div class="wc-cell"></div>
+            </div>
+            <div class="wc-line" style="margin-top:10px"></div>
+            <div class="wc-line wc-short"></div>
+            <div class="wc-line" style="margin-top:5px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="product-body">
+        <div class="product-eyebrow">Fill-In Workbook · Strategy</div>
+        <div class="product-name">Brand Marketing<br>Systems for Small<br>Businesses</div>
+        <div class="product-price"><sup style="font-size:20px;vertical-align:super">$</sup>19<span style="font-size:18px;font-weight:300">.99</span> <span class="price-was">$28.99</span></div>
+        <div class="product-desc">A structured fill-in workbook for small business owners and DTC founders who need clarity on positioning, content systems, and campaign frameworks — without the agency price tag.</div>
+        <ul class="product-list">
+          <li>Brand identity and pillar worksheets</li>
+          <li>Content system and campaign planning templates</li>
+          <li>Step-by-step fill-in format — no guesswork</li>
+          <li>Instant digital download</li>
+          <li>Currently 31% off</li>
+        </ul>
+        <a href="https://beacons.ai/korrehq" target="_blank" class="product-btn">Get the workbook — $19.99 ↗</a>
+      </div>
+    </div>
+
+  </div>
+  <p style="text-align:center;margin-top:20px;font-size:10px;color:var(--text-dim)">Not sure where to start? <a href="https://calendly.com/korrehq/20min" target="_blank" style="color:var(--cyan);text-decoration:none">Book a free 20-min call ↗</a></p>
+</section>
+
+<!-- PRICING -->
+<section class="sec sec-alt" id="pricing">
+  <div class="sec-label reveal">Campaign Pricing</div>
+  <h2 class="sec-h reveal">Clear scope.<br><em>No surprises.</em></h2>
+  <div class="pricing-grid reveal">
+    <div class="pc">
+      <div class="pc-tier">Tier 0 — Foundation</div>
+      <div class="pc-price"><sup>$</sup>400<span style="font-size:22px;color:var(--text-dim)">–800</span></div>
+      <div class="pc-desc">AI model reference pack. Your visual foundation before the campaign begins. Pre-made or fully custom to your brand.</div>
+      <div class="pc-div"></div>
+      <ul class="pc-feats">
+        <li>20–40 structured reference images</li>
+        <li>Cohesive campaign aesthetic baseline</li>
+        <li>Pre-made ($400) or custom model ($800)</li>
+        <li>Full commercial usage rights</li>
+      </ul>
+      <a href="#products" class="pc-btn">See Alexandria ↑</a>
+    </div>
+    <div class="pc featured">
+      <div class="pc-tier">Tier 1 — Campaign</div>
+      <div class="pc-price"><sup>$</sup>900</div>
+      <div class="pc-desc">9 campaign images. One arc. One world. Built around your aesthetic pillar, your emotional register, your brand.</div>
+      <div class="pc-div"></div>
+      <ul class="pc-feats">
+        <li>9 images, one arc mode (Story or Atmosphere)</li>
+        <li>Pillar diagnosis + hook mapping</li>
+        <li>Brand Reference Pack onboarding</li>
+        <li>1 revision round included</li>
+        <li>Full commercial usage rights</li>
+      </ul>
+      <a href="https://calendly.com/korrehq/20min" target="_blank" class="pc-btn">Book a 20-min call</a>
+    </div>
+    <div class="pc">
+      <div class="pc-tier">Tier 2 — A/B Matrix</div>
+      <div class="pc-price"><sup>$</sup>1,500</div>
+      <div class="pc-desc">Two campaign directions. One controlled variable. Real positioning data before you scale ad spend.</div>
+      <div class="pc-div"></div>
+      <ul class="pc-feats">
+        <li>18 images across two directions</li>
+        <li>One variable tested per campaign</li>
+        <li>A/B concept presentation included</li>
+        <li>1 revision round per concept</li>
+        <li>Full commercial usage rights</li>
+      </ul>
+      <a href="https://calendly.com/korrehq/20min" target="_blank" class="pc-btn">Book a 20-min call</a>
+    </div>
+  </div>
+  <p class="pricing-note">50% deposit to begin · 50% on delivery · Files released on final payment</p>
+</section>
+
+<!-- PROCESS -->
+<section class="sec">
+  <div class="sec-label reveal">How it works</div>
+  <h2 class="sec-h reveal">Five steps.<br><em>No ambiguity.</em></h2>
+  <div class="process-grid reveal">
+    <div class="pstep">
+      <div class="pstep-n">1</div>
+      <div class="pstep-title">Inquiry</div>
+      <div class="pstep-desc">You reach out or book a call. We send the Service Deck and Intake Form. No pitch — just a clean first look.</div>
+    </div>
+    <div class="pstep">
+      <div class="pstep-n">2</div>
+      <div class="pstep-title">Consult Call</div>
+      <div class="pstep-desc">20 minutes. We make sure we're a good fit. Contract and deposit follow if confirmed.</div>
+    </div>
+    <div class="pstep">
+      <div class="pstep-n">3</div>
+      <div class="pstep-title">Brand Reference</div>
+      <div class="pstep-desc">You complete the Brand Reference Pack. We build the creative hypothesis and campaign world from it.</div>
+    </div>
+    <div class="pstep">
+      <div class="pstep-n">4</div>
+      <div class="pstep-title">Production</div>
+      <div class="pstep-desc">We handle production independently to maintain focus and cohesion. You receive the complete campaign presentation at delivery.</div>
+    </div>
+    <div class="pstep">
+      <div class="pstep-n">5</div>
+      <div class="pstep-title">Delivery</div>
+      <div class="pstep-desc">Full campaign. One revision round. Files are released upon final payment. Your campaign is archived and ready for future expansion.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec sec-alt" id="contact">
+  <div class="sec-label reveal">Get in touch</div>
+  <div class="contact-grid">
+    <div class="reveal">
+      <h2 class="contact-h">Ready to build<br>your <em>world?</em></h2>
+      <p class="contact-body">We work best with brands who are ready for clarity and long-term positioning. If that's you, we'd love to connect.</p>
+      <div class="call-box">
+        <p>Prefer to speak directly? Book a complimentary 20-minute strategy call — no pressure, just a conversation about your brand and what you're building.</p>
+        <a href="https://calendly.com/korrehq/20min" target="_blank" class="btn-call">Book a free 20-min call ↗</a>
+      </div>
+      <div class="tags">
+        <a href="https://www.instagram.com/korrehq" target="_blank" style="text-decoration:none"><span class="tag">Instagram ↗</span></a>
+        <a href="https://substack.com/@korrehq" target="_blank" style="text-decoration:none"><span class="tag">Substack ↗</span></a>
+        <a href="https://www.tiktok.com/@korrehq" target="_blank" style="text-decoration:none"><span class="tag">TikTok ↗</span></a>
+        <a href="https://higgsfield.ai/@korrehq" target="_blank" style="text-decoration:none"><span class="tag">Portfolio ↗</span></a>
+      </div>
+    </div>
+    <div class="reveal">
+      <span class="form-section-label">Or send a message</span>
+      <form class="form" onsubmit="handleSubmit(event)">
+        <input type="text" class="fi" placeholder="Your name" required>
+        <input type="email" class="fi" placeholder="Email address" required>
+        <input type="text" class="fi" placeholder="Brand name + Instagram handle">
+        <input type="text" class="fi" placeholder="Which tier are you interested in?">
+        <textarea class="fi ta" placeholder="Tell us about your brand and what this campaign needs to do."></textarea>
+        <button type="submit" class="fsub">Send inquiry →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">KORRE<span>.</span></div>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/korrehq" target="_blank">Instagram</a>
+    <a href="https://substack.com/@korrehq" target="_blank">Substack</a>
+    <a href="https://www.tiktok.com/@korrehq" target="_blank">TikTok</a>
+    <a href="https://higgsfield.ai/@korrehq" target="_blank">Higgsfield</a>
+    <a href="https://beacons.ai/korrehq" target="_blank">Shop</a>
+  </div>
+  <div class="footer-copy">© 2025 Korre Systems</div>
+</footer>
+
+<script>
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function ar(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ar)})();
+document.querySelectorAll('a,button,.m-item,.pillar-card,.pc,.pstep,.intel-cell,.product-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='14px';cur.style.height='14px';ring.style.width='52px';ring.style.height='52px'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='7px';cur.style.height='7px';ring.style.width='34px';ring.style.height='34px'});
+});
+
+const toggle=document.getElementById('themeToggle'),label=document.getElementById('toggleLabel'),root=document.documentElement;
+toggle.addEventListener('click',()=>{
+  const d=root.getAttribute('data-theme')==='dark';
+  root.setAttribute('data-theme',d?'light':'dark');
+  label.textContent=d?'Light':'Dark';
+});
+
+const g=document.getElementById('heroGrid');
+for(let i=0;i<40;i++){const c=document.createElement('div');c.className='grid-cell';g.appendChild(c);}
+
+const obs=new IntersectionObserver(entries=>entries.forEach((e,i)=>{
+  if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*70);obs.unobserve(e.target);}
+}),{threshold:0.06});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+function handleSubmit(e){
+  e.preventDefault();
+  const b=e.target.querySelector('.fsub');
+  b.textContent="Sent. We'll be in touch within 48 hours.";
+  b.style.background='var(--green)';
+  b.disabled=true;
+}
+</script>
+</body>
+</html>
