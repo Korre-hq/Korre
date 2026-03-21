@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KORRE — AI Visual Campaign Studio</title>
+<meta name="description" content="9-image AI visual campaigns for DTC fashion, beauty, and lifestyle brands. Six aesthetic pillars. Strategy before production.">
+<meta property="og:title" content="KORRE — AI Visual Campaign Studio">
+<meta property="og:description" content="Where your brand becomes a world worth entering. 9-image campaigns built for DTC brands who are ready to be unmistakable.">
+<meta property="og:url" content="https://korre-hq.github.io/Korre/">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -172,14 +177,10 @@ nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:22px 48px; di
 [data-theme="light"] .product-card { background:var(--surface); }
 .product-img-zone { height:280px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--bg3); }
 [data-theme="light"] .product-img-zone { background:var(--bg2); }
-
-/* Alexandria model grid */
 .model-preview-grid { display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(2,1fr); gap:2px; width:100%; height:100%; }
 .model-cell { background:var(--bg); overflow:hidden; display:flex; align-items:flex-end; justify-content:center; }
 [data-theme="light"] .model-cell { background:var(--bg3); }
 .figure-svg { width:65%; height:90%; }
-
-/* Workbook mock */
 .workbook-zone { width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:linear-gradient(155deg,#091520 0%,#0a2020 100%); }
 [data-theme="light"] .workbook-zone { background:linear-gradient(155deg,#d8e4e4 0%,#ccdada 100%); }
 .workbook-card { width:150px; padding:22px 18px; background:var(--surface); border:1px solid var(--border); }
@@ -188,7 +189,6 @@ nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:22px 48px; di
 .wc-short { width:38%; }
 .wc-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-top:10px; }
 .wc-cell { height:24px; background:var(--mono-tag-bg); }
-
 .product-badge { position:absolute; top:18px; right:18px; background:var(--cyan); color:var(--bg); font-size:8px; letter-spacing:1.5px; padding:4px 10px; font-weight:500; text-transform:uppercase; }
 .product-body { padding:32px 28px; flex:1; display:flex; flex-direction:column; }
 .product-eyebrow { font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--cyan); margin-bottom:10px; }
@@ -249,6 +249,12 @@ nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:22px 48px; di
 .fi.ta { resize:none; height:72px; }
 .fsub { align-self:flex-start; background:var(--cyan); color:var(--bg); border:none; padding:16px 40px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; cursor:none; transition:all 0.3s; margin-top:8px; font-weight:500; }
 .fsub:hover { background:var(--text); }
+
+/* SUCCESS STATE */
+.form-success { display:none; padding:32px; background:var(--mono-tag-bg); border:1px solid var(--border); text-align:center; }
+.form-success.visible { display:block; }
+.form-success p { font-size:11px; color:var(--text-mid); line-height:1.8; }
+.form-success strong { color:var(--cyan); font-weight:500; display:block; font-family:'Cormorant Garamond',serif; font-size:18px; margin-bottom:8px; }
 
 footer { padding:40px 48px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:var(--bg); transition:background 0.4s,border-color 0.4s; }
 .footer-logo { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:700; letter-spacing:3px; }
@@ -442,14 +448,11 @@ footer { padding:40px 48px; border-top:1px solid var(--border); display:flex; ju
 <section class="sec" id="products">
   <div class="sec-label reveal">Products</div>
   <h2 class="sec-h reveal">Tools built for<br>brands building <em>themselves.</em></h2>
-
   <div class="product-grid reveal">
-
     <!-- ALEXANDRIA -->
     <div class="product-card">
       <div class="product-img-zone">
         <div class="model-preview-grid">
-          <!-- 6 pose silhouettes representing the Alexandria model reference images -->
           <div class="model-cell">
             <svg class="figure-svg" viewBox="0 0 60 160" fill="none">
               <ellipse cx="30" cy="14" rx="10" ry="12" fill="#51a3a3" opacity="0.45"/>
@@ -471,7 +474,6 @@ footer { padding:40px 48px; border-top:1px solid var(--border); display:flex; ju
             </svg>
           </div>
           <div class="model-cell">
-            <!-- side/profile -->
             <svg class="figure-svg" viewBox="0 0 60 160" fill="none">
               <ellipse cx="33" cy="13" rx="9" ry="11" fill="#51a3a3" opacity="0.45"/>
               <rect x="26" y="23" width="15" height="40" rx="3" fill="#51a3a3" opacity="0.32"/>
@@ -481,7 +483,6 @@ footer { padding:40px 48px; border-top:1px solid var(--border); display:flex; ju
             </svg>
           </div>
           <div class="model-cell">
-            <!-- crouched on floor -->
             <svg class="figure-svg" viewBox="0 0 60 160" fill="none">
               <ellipse cx="30" cy="52" rx="10" ry="11" fill="#51a3a3" opacity="0.45"/>
               <rect x="21" y="62" width="18" height="28" rx="4" fill="#51a3a3" opacity="0.32"/>
@@ -492,7 +493,6 @@ footer { padding:40px 48px; border-top:1px solid var(--border); display:flex; ju
             </svg>
           </div>
           <div class="model-cell">
-            <!-- arm to face -->
             <svg class="figure-svg" viewBox="0 0 60 160" fill="none">
               <ellipse cx="30" cy="13" rx="9" ry="11" fill="#51a3a3" opacity="0.45"/>
               <rect x="22" y="23" width="16" height="40" rx="3" fill="#51a3a3" opacity="0.32"/>
@@ -503,7 +503,6 @@ footer { padding:40px 48px; border-top:1px solid var(--border); display:flex; ju
             </svg>
           </div>
           <div class="model-cell">
-            <!-- back view -->
             <svg class="figure-svg" viewBox="0 0 60 160" fill="none">
               <ellipse cx="30" cy="13" rx="9" ry="11" fill="#51a3a3" opacity="0.35"/>
               <rect x="22" y="23" width="16" height="40" rx="3" fill="#51a3a3" opacity="0.3"/>
@@ -531,7 +530,6 @@ footer { padding:40px 48px; border-top:1px solid var(--border); display:flex; ju
         <a href="https://shop.beacons.ai/korrehq/13814391-4d0b-4516-874f-0878a08816b8" target="_blank" class="product-btn solid">Get Alexandria — $349.99 ↗</a>
       </div>
     </div>
-
     <!-- WORKBOOK -->
     <div class="product-card">
       <div class="product-img-zone">
@@ -567,7 +565,6 @@ footer { padding:40px 48px; border-top:1px solid var(--border); display:flex; ju
         <a href="https://beacons.ai/korrehq" target="_blank" class="product-btn">Get the workbook — $19.99 ↗</a>
       </div>
     </div>
-
   </div>
   <p style="text-align:center;margin-top:20px;font-size:10px;color:var(--text-dim)">Not sure where to start? <a href="https://calendly.com/korrehq/20min" target="_blank" style="color:var(--cyan);text-decoration:none">Book a free 20-min call ↗</a></p>
 </section>
@@ -675,14 +672,53 @@ footer { padding:40px 48px; border-top:1px solid var(--border); display:flex; ju
     </div>
     <div class="reveal">
       <span class="form-section-label">Or send a message</span>
-      <form class="form" onsubmit="handleSubmit(event)">
-        <input type="text" class="fi" placeholder="Your name" required>
-        <input type="email" class="fi" placeholder="Email address" required>
-        <input type="text" class="fi" placeholder="Brand name + Instagram handle">
-        <input type="text" class="fi" placeholder="Which tier are you interested in?">
-        <textarea class="fi ta" placeholder="Tell us about your brand and what this campaign needs to do."></textarea>
-        <button type="submit" class="fsub">Send inquiry →</button>
+
+      <!-- FORMSPREE FORM — action points to your Formspree endpoint -->
+      <form
+        id="contactForm"
+        class="form"
+        action="https://formspree.io/f/mojkzwbg"
+        method="POST"
+      >
+        <input
+          type="text"
+          class="fi"
+          placeholder="Your name"
+          name="name"
+          required
+        >
+        <input
+          type="email"
+          class="fi"
+          placeholder="Email address"
+          name="email"
+          required
+        >
+        <input
+          type="text"
+          class="fi"
+          placeholder="Brand name + Instagram handle"
+          name="brand"
+        >
+        <input
+          type="text"
+          class="fi"
+          placeholder="Which tier are you interested in?"
+          name="tier"
+        >
+        <textarea
+          class="fi ta"
+          placeholder="Tell us about your brand and what this campaign needs to do."
+          name="message"
+        ></textarea>
+        <button type="submit" class="fsub" id="submitBtn">Send inquiry →</button>
       </form>
+
+      <!-- SUCCESS STATE shown after Formspree submission -->
+      <div class="form-success" id="formSuccess">
+        <strong>Message received.</strong>
+        <p>We'll be in touch within 48 hours. In the meantime, feel free to browse the portfolio on Higgsfield or book a call directly.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -700,6 +736,7 @@ footer { padding:40px 48px; border-top:1px solid var(--border); display:flex; ju
 </footer>
 
 <script>
+/* ── Custom cursor ── */
 const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
@@ -709,6 +746,7 @@ document.querySelectorAll('a,button,.m-item,.pillar-card,.pc,.pstep,.intel-cell,
   el.addEventListener('mouseleave',()=>{cur.style.width='7px';cur.style.height='7px';ring.style.width='34px';ring.style.height='34px'});
 });
 
+/* ── Theme toggle ── */
 const toggle=document.getElementById('themeToggle'),label=document.getElementById('toggleLabel'),root=document.documentElement;
 toggle.addEventListener('click',()=>{
   const d=root.getAttribute('data-theme')==='dark';
@@ -716,21 +754,57 @@ toggle.addEventListener('click',()=>{
   label.textContent=d?'Light':'Dark';
 });
 
+/* ── Hero grid ── */
 const g=document.getElementById('heroGrid');
 for(let i=0;i<40;i++){const c=document.createElement('div');c.className='grid-cell';g.appendChild(c);}
 
+/* ── Scroll reveal ── */
 const obs=new IntersectionObserver(entries=>entries.forEach((e,i)=>{
   if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*70);obs.unobserve(e.target);}
 }),{threshold:0.06});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-function handleSubmit(e){
+/* ── Formspree AJAX submission ──
+   Submits via fetch so the user stays on the page.
+   On success: hides the form, shows the success message.
+   On error: re-enables the button with an error note.
+*/
+const form = document.getElementById('contactForm');
+const successBox = document.getElementById('formSuccess');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async function(e) {
   e.preventDefault();
-  const b=e.target.querySelector('.fsub');
-  b.textContent="Sent. We'll be in touch within 48 hours.";
-  b.style.background='var(--green)';
-  b.disabled=true;
-}
+
+  submitBtn.textContent = 'Sending…';
+  submitBtn.disabled = true;
+
+  const data = new FormData(form);
+
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.ok) {
+      form.style.display = 'none';
+      successBox.classList.add('visible');
+    } else {
+      const json = await res.json();
+      const msg = (json.errors || []).map(err => err.message).join(', ') || 'Something went wrong.';
+      submitBtn.textContent = 'Error — try again';
+      submitBtn.style.background = '#a33';
+      submitBtn.disabled = false;
+      console.error('Formspree error:', msg);
+    }
+  } catch (err) {
+    submitBtn.textContent = 'Network error — try again';
+    submitBtn.style.background = '#a33';
+    submitBtn.disabled = false;
+  }
+});
 </script>
 </body>
 </html>
